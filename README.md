@@ -131,3 +131,7 @@ Running the script DailySnapshot.ps1 will create a snapshot of each volume for e
 To automate the process, you can setup a recurring task in Task Scheduler.  When doing so, make sure you execute the "powershell" command and not just the script:
 
 ![task scheduler screenshow](http://i.imgur.com/07ozK3e.png)
+
+## License
+
+Released under the MIT License. See the bundled LICENSE file for details.
