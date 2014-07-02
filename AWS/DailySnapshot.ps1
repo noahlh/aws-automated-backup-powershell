@@ -29,7 +29,6 @@ try
     $minutes=$timespan.Minutes    
     WriteToEmail "Backup took $hours hr(s) and $minutes min(s)"
     
-    WriteToEmail "Click here to test: $TEST_URL" -excludeTimeStamp $true
     SendStatusEmail -successString "SUCCESS"
 }
 catch
