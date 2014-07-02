@@ -37,7 +37,9 @@ function AddTagToResource([string] $resourceID, [string] $key, [string] $value)
         $tag.Value=$value
         
         $createTagsRequest = new-object amazon.EC2.Model.CreateTagsRequest
-        $createTagsResponse = $EC2_CLIENT.CreateTags($createTagsRequest.WithResourceId($resourceID).WithTag($tag))
+        $createTagsRequest.Resources = $resourceID
+        $createTagsRequest.Tags = $tag
+        $createTagsResponse = $EC2_CLIENT.CreateTags($createTagsRequest)
         $createTagsResult = $createTagsResponse.CreateTagsResult; 
     }
     catch [Exception]
@@ -171,13 +173,15 @@ function SendSesEmail([string] $from, [string[]]$toList, [string]$subject, [stri
         {
             $list.Add($address)
         }
-        $request.Destination = $list
+        $toObject = new-object -TypeName Amazon.SimpleEmail.Model.Destination
+        $toObject.ToAddresses = $list
+        $request.Destination = $toObject
         $subjectObject = new-object -TypeName Amazon.SimpleEmail.Model.Content
-        $subjectObject.data = $subject
+        $subjectObject.Data = $subject
         $bodyContent = new-object -TypeName Amazon.SimpleEmail.Model.Content
-        $bodyContent.data = $body
+        $bodyContent.Data = $body
         $bodyObject = new-object -TypeName Amazon.SimpleEmail.Model.Body
-        $bodyObject.text = $bodyContent
+        $bodyObject.Text = $bodyContent
         $message = new-object -TypeName Amazon.SimpleEmail.Model.Message
         $message.Subject = $subjectObject
         $message.Body = $bodyObject
@@ -228,9 +232,10 @@ function GetInstance([string] $instanceID)
     try
     {
         $instancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
-        $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest.WithInstanceId($instanceID))
-        $instancesResult = $instancesResponse.DescribeInstancesResult.Reservation
-        return $instancesResult[0].RunningInstance[0]
+        $instancesRequest.InstanceIds = $instanceID
+        $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest)
+        $instancesResult = $instancesResponse.DescribeInstancesResult.Reservations
+        return $instancesResult[0].Instances[0]
     }
     catch [Exception]
     {
@@ -248,13 +253,13 @@ function GetAllInstances()
     {
         $instancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
         $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest)
-        $instancesResult = $instancesResponse.DescribeInstancesResult.Reservation
+        $instancesResult = $instancesResponse.DescribeInstancesResult.Reservations
         
          $allInstances = new-object System.Collections.ArrayList
         
         foreach($reservation in $instancesResult)
         {
-            foreach($instance in $reservation.RunningInstance)
+            foreach($instance in $reservation.Instances)
             {
                 $allInstances.Add($instance) | out-null
             }
@@ -282,7 +287,7 @@ function GetRunningInstances()
 
         foreach($instance in $allInstances)
         {
-            if($instance.InstanceState.Name -eq "running")
+            if($instance.State.Name -eq "running")
             {
                 $runningInstances.Add($instance) | out-null
             }
@@ -305,7 +310,7 @@ function GetInstanceStatus([string] $instanceID)
     try
     {
         $instance = GetInstance $instanceID
-        return $instance.InstanceState.Name
+        return $instance.State.Name
     }
     catch [Exception]
     {
@@ -323,7 +328,7 @@ function GetInstanceName([string] $instanceID)
     {
         $name = ""
         $instance = GetInstance $instanceID
-        foreach($tag in $instance.Tag)
+        foreach($tag in $instance.Tags)
         {
             if($tag.Key -eq "Name")
             {
@@ -357,14 +362,15 @@ function StartInstance([string] $instanceID)
         {
             #Start instance    
             $startReq = new-object amazon.EC2.Model.StartInstancesRequest
-            $startReq.InstanceId.Add($instanceID);    
+            $startReq.InstanceIds.Add($instanceID);    
 
             WriteToLog "Instance $name ($instanceID) Starting"    
             $startResponse = $EC2_CLIENT.StartInstances($startReq)
             $startResult = $startResponse.StartInstancesResult;
             
             #Wait for instance to finish starting. Unlike Stop instance,start one at a time (ex. DC, SQL, SP)
-            $instancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest     
+            $instancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
+            $instancesRequest.InstanceIds = $instanceID    
             
             $start = get-date
                        
@@ -373,10 +379,10 @@ function StartInstance([string] $instanceID)
                 if(IsTimedOut $start) { break } 
                 
                 start-sleep -s 5
-                $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest.WithInstanceId($instanceID))
-                $instancesResult = $instancesResponse.DescribeInstancesResult.Reservation
+                $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest)
+                $instancesResult = $instancesResponse.DescribeInstancesResult.Reservations
             }
-            while($instancesResult[0].RunningInstance[0].InstanceState.Name -ne "running") 
+            while($instancesResult[0].Instances[0].State.Name -ne "running") 
             
             WriteToLog "Instance $name ($instanceID) Started"  
             WriteToEmail "$name started"               
@@ -457,7 +463,7 @@ function StopInstance([string] $instanceID)
         {
             #Stop instance    
             $stopReq = new-object amazon.EC2.Model.StopInstancesRequest
-            $stopReq.InstanceId.Add($instanceID);
+            $stopReq.InstanceIds.Add($instanceID);
        
             WriteToLog "Instance $name ($instanceID) Stopping"
             $stopResponse = $EC2_CLIENT.StopInstances($stopReq)
@@ -561,9 +567,10 @@ function GetSnapshot([string] $snapshotID)
     try
     {
         $snapshotsRequest = new-object amazon.EC2.Model.DescribeSnapshotsRequest
-        $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest.WithSnapshotId($snapshotID))
+        $snapshotsRequest.SnapshotIds = $snapshotID
+        $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest)
         $snapshotsResult = $snapshotsResponse.DescribeSnapshotsResult
-        return $snapshotsResult.Snapshot[0]
+        return $snapshotsResult.Snapshots[0]
     }
     catch [Exception]
     {
@@ -580,9 +587,10 @@ function GetAllSnapshots
     try
     {
         $snapshotsRequest = new-object amazon.EC2.Model.DescribeSnapshotsRequest
-        $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest.WithOwner($accountID))
+        $snapshotsRequest.OwnerIds = $accountID
+        $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest)
         $snapshotsResult = $snapshotsResponse.DescribeSnapshotsResult
-        return $snapshotsResult.Snapshot
+        return $snapshotsResult.Snapshots
     }
     catch [Exception]
     {
@@ -619,7 +627,8 @@ function DeleteSnapshot([string] $snapshotID)
         WriteToLog "Snapshot $name ($snapshotID) Deleting"
 
         $deleteSnapshotRequest = new-object amazon.EC2.Model.DeleteSnapshotRequest
-        $deleteSnapshotResponse = $EC2_CLIENT.DeleteSnapshot($deleteSnapshotRequest.WithSnapshotId($snapshotID))
+        $deleteSnapshotRequest.SnapshotId = $snapshotID
+        $deleteSnapshotResponse = $EC2_CLIENT.DeleteSnapshot($deleteSnapshotRequest)
         $deleteSnapshotResult = $deleteSnapshotResponse.DeleteSnapshotResult; 
         
         WriteToLog "Snapshot $name ($snapshotID) Deleted" 
@@ -644,16 +653,18 @@ function CreateSnapshotForInstance([string] $volumeID, [string] $instanceID)
         #Generate meaningful description for snapshot
         $date = get-date -format yyyyMMddhhmmss
         $name = GetInstanceName $instanceID
-        $description = "{0} {1} {2}" -f $name, $BACKUP_TYPE, $date
+        $description = "{0} {1} {2} {3}" -f $name, $volumeID, $BACKUP_TYPE, $date
                  
         WriteToLog "Instance $name ($instanceID) Creating Snapshot"
                  
         $createSnapshotRequest = new-object amazon.EC2.Model.CreateSnapshotRequest
-        $createSnapshotResponse = $EC2_CLIENT.CreateSnapshot($createSnapshotRequest.WithVolumeId($volumeID).WithDescription($description))
+        $createSnapshotRequest.Description = $description
+        $createSnapshotRequest.VolumeId = $volumeID
+        $createSnapshotResponse = $EC2_CLIENT.CreateSnapshot($createSnapshotRequest)
         $createSnapshotResult = $createSnapshotResponse.CreateSnapshotResult; 
         
         WriteToLog "Snapshot $description Created for $name ($instanceID)"
-        WriteToEmail "$name snapshot successful"
+        WriteToEmail "$name $volumeID snapshot successful"
         return $createSnapshotResult.Snapshot.SnapshotId
     }
     catch [Exception]
@@ -677,16 +688,17 @@ function CreateSnapshotsForInstances([string[]] $instanceIDs)
             $volumesRequest = new-object amazon.EC2.Model.DescribeVolumesRequest
             $volumesResponse = $EC2_CLIENT.DescribeVolumes($volumesRequest)
             $volumesResult = $volumesResponse.DescribeVolumesResult
-            foreach($volume in $volumesResult.Volume)
+            foreach($volume in $volumesResult.Volumes)
             {
 
-                if($InstanceIDs -contains $volume.Attachment[0].InstanceId)
+                if($InstanceIDs -contains $volume.Attachments[0].InstanceId)
                 {            
                     #Create the snapshot
-                    $snapshotId = CreateSnapshotForInstance $volume.VolumeId $volume.Attachment[0].InstanceId           
+                    $snapshotId = CreateSnapshotForInstance $volume.VolumeId $volume.Attachments[0].InstanceId           
 
                     #Wait for snapshot creation to complete
-                    $snapshotsRequest = new-object amazon.EC2.Model.DescribeSnapshotsRequest   
+                    $snapshotsRequest = new-object amazon.EC2.Model.DescribeSnapshotsRequest
+                    $snapshotsRequest.SnapshotIds = $snapshotId   
                     
                     $start = get-date             
                     do
@@ -695,10 +707,10 @@ function CreateSnapshotsForInstances([string[]] $instanceIDs)
                         if(IsTimedOut $Start) { break } 
                         
                         start-sleep -s 5
-                        $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest.WithSnapshotId($snapshotId))
+                        $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest)
                         $snapshotsResult = $snapshotsResponse.DescribeSnapshotsResult
                     }
-                    while($snapshotsResult.Snapshot[0].Status -ne "completed")            
+                    while($snapshotsResult.Snapshots[0].State -ne "completed")            
                     
                 }            
             }  
@@ -821,7 +833,7 @@ function CleanupWeeklySnapshots
     }
     catch [Exception]
     {
-        $function = "CleanupDailySnapshots"
+        $function = "CleanupWeeklySnapshots"
         $exception = $_.Exception.ToString()
         WriteToLogAndEmail "function: $exception" -isException $true
         return false
