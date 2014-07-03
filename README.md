@@ -132,6 +132,10 @@ To automate the process, you can setup a recurring task in Task Scheduler.  When
 
 ![task scheduler screenshow](http://i.imgur.com/07ozK3e.png)
 
+## Contribute
+
+I did this mostly to learn, so please excuse any bugs / awful code.  And more imporantly, please help improve these scripts!  Open an issue, fork, submit a pull request, etc.  You know the drill.  I'm game. 
+
 ## License
 
 Released under the MIT License. See the bundled LICENSE file for details.
