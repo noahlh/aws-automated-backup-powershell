@@ -46,7 +46,7 @@ function AddTagToResource([string] $resourceID, [string] $key, [string] $value)
     {
         $function = "AddTagToResource"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
 }
 #Description: Add carriage return characters for formatting purposes (ex. email)
@@ -65,7 +65,7 @@ function FixNewLines([string[]] $text)
     {
         $function = "FixNewLines"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
 
     return $returnText
@@ -121,7 +121,7 @@ function WriteToLog([string[]] $text, [bool] $isException = $false)
     {
         $function = "WriteToLog"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }    
 }
 #Description: Writes a email variable for later usage
@@ -144,7 +144,7 @@ function WriteToEmail([string[]] $text, [bool] $excludeTimeStamp = $false)
     {
         $function = "WriteToEmail"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
 }
 
@@ -194,7 +194,7 @@ function SendSesEmail([string] $from, [string[]]$toList, [string]$subject, [stri
     {
         $function = "SendSesEmail"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
     
 }
@@ -220,7 +220,7 @@ function SendStatusEmail([string[]] $toAddress, [string] $successString = "", [s
     {
         $function = "SendStatusEmail"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
 } 
 ############## I N S T A N C E   F U N C T I O N S ##############
@@ -241,7 +241,7 @@ function GetInstance([string] $instanceID)
     {
         $function = "GetInstance"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -271,7 +271,7 @@ function GetAllInstances()
     {
         $function = "GetAllInstances"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -299,7 +299,7 @@ function GetRunningInstances()
     {
         $function = "GetRunningInstances"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -316,7 +316,7 @@ function GetInstanceStatus([string] $instanceID)
     {
         $function = "GetInstanceStatus"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -341,7 +341,7 @@ function GetInstanceName([string] $instanceID)
     {
         $function = "GetInstanceName"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -392,7 +392,7 @@ function StartInstance([string] $instanceID)
     {
         $function = "StartInstance"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }    
 }
 #Description: Starts one or more Amazon Web Service Instance object for a collection of instance Ids
@@ -419,7 +419,7 @@ function StartInstances ([string[]] $instanceIDs)
     {
         $function = "Start Instances"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
     
 }
@@ -442,7 +442,7 @@ function StartAllInstances()
     {
         $function = "StopRunningInstances"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
 }
 #Description: Stops an Amazon Web Service Instance object for a given instance Id
@@ -475,7 +475,7 @@ function StopInstance([string] $instanceID)
     {
         $function = "StopInstance"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -531,7 +531,7 @@ function StopInstances([string[]] $instanceIDs)
     {
         $function = "StopInstances"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
 }
 #Description: Stops all Amazon Web Service Instances
@@ -553,7 +553,7 @@ function StopAllInstances()
     {
         $function = "StopAllInstances"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
 }
 
@@ -576,7 +576,7 @@ function GetSnapshot([string] $snapshotID)
     {
         $function = "GetSnapshot"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -596,7 +596,7 @@ function GetAllSnapshots
     {
         $function = "GetAllSnapshots"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }
 }
@@ -613,7 +613,7 @@ function GetSnapshotDescription([string] $snapshotID)
     {
         $function = "GetSnapshotDescription"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return $null
     }    
 }
@@ -639,7 +639,7 @@ function DeleteSnapshot([string] $snapshotID)
     {
         $function = "DeleteSnapshot"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
     }
     
 }
@@ -672,7 +672,7 @@ function CreateSnapshotForInstance([string] $volumeID, [string] $instanceID)
         $function = "CreateSnapshotForInstance"
         $exception = $_.Exception.ToString()
         WriteToEmail "$name snapshot failed, Exception:"
-        WriteToLogAndEmail "function: $exception" -isException $true
+        WriteToLogAndEmail "$function : $exception" -isException $true
         return $null
     }
 }
@@ -724,7 +724,7 @@ function CreateSnapshotsForInstances([string[]] $instanceIDs)
     {
         $function = "CreateSnapshotForInstances"
         $exception = $_.Exception.ToString()
-        WriteToLogAndEmail "function: $exception" -isException $true
+        WriteToLogAndEmail "$function : $exception" -isException $true
     }
 }
 #Description: Returns true if passed date is before the current date minus $EXPIRATION_DAYS value
@@ -740,7 +740,7 @@ function IsDailySnapshotExpired([datetime] $backupDate)
     {
         $function = "IsDailySnapshotExpired"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return false
     }    
 }
@@ -759,7 +759,7 @@ function IsWeeklySnapshotExpired([datetime] $backupDate)
     {
         $function = "IsWeeklySnapshotExpired"
         $exception = $_.Exception.ToString()
-        WriteToLog "function: $exception" -isException $true
+        WriteToLog "$function : $exception" -isException $true
         return false
     }    
 }
@@ -797,7 +797,7 @@ function CleanupDailySnapshots
     {
         $function = "CleanupWeeklySnapshots"
         $exception = $_.Exception.ToString()
-        WriteToLogAndEmail "function: $exception" -isException $true
+        WriteToLogAndEmail "$function : $exception" -isException $true
         return false
     } 
 }
@@ -835,7 +835,7 @@ function CleanupWeeklySnapshots
     {
         $function = "CleanupWeeklySnapshots"
         $exception = $_.Exception.ToString()
-        WriteToLogAndEmail "function: $exception" -isException $true
+        WriteToLogAndEmail "$function : $exception" -isException $true
         return false
     } 
 }
