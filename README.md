@@ -151,11 +151,11 @@ SES:
 
   * SendEmail 
   * SendRawEmail
-  
+
 ## Contribute
 
 I did this mostly to learn, so please excuse any bugs / awful code.  And more imporantly, please help improve these scripts!  Open an issue, fork, submit a pull request, etc.  You know the drill.  I'm game. 
 
 ## License
 
-Released under the MIT License. See the bundled LICENSE file for details.
+Copyright (C) 2015 - Noah Lehmann-Haupt  Released under the MIT License. See the bundled LICENSE file for details.
