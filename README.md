@@ -132,6 +132,26 @@ To automate the process, you can setup a recurring task in Task Scheduler.  When
 
 ![task scheduler screenshow](http://i.imgur.com/07ozK3e.png)
 
+## Troubleshooting
+
+So far a majority of the issues encountered (going purely by the small number of Github issues I've received here) have to do with IAM permissions for the user / API key executing the scripts.  Do make sure your IAM user has permissions for at least the following actions:
+
+EC2:
+
+  * CreateTags
+  * DescribeInstances
+  * StartInstances
+  * StopInstances
+  * DescribeSnapshots
+  * DeleteSnapshot
+  * CreateSnapshot
+  * DescribeVolumes
+
+SES:
+
+  * SendEmail 
+  * SendRawEmail
+  
 ## Contribute
 
 I did this mostly to learn, so please excuse any bugs / awful code.  And more imporantly, please help improve these scripts!  Open an issue, fork, submit a pull request, etc.  You know the drill.  I'm game. 
