@@ -158,4 +158,4 @@ I did this mostly to learn, so please excuse any bugs / awful code.  And more im
 
 ## License
 
-Copyright (C) 2015 - Noah Lehmann-Haupt  Released under the MIT License. See the bundled LICENSE file for details.
+Copyright (C) 2015 - Noah Lehmann-Haupt.  Released under the MIT License. See the bundled LICENSE file for details.
