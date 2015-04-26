@@ -115,14 +115,14 @@ Verify the paths to AWSConfig.ps1 and AWSUtilities.ps1 :
 ."C:\AWS\AWSUtilities.ps1"
 ```
 
-Edit the environment variables to define the Name (i.e. "Our Cloud Servers"), Type (i.e. "Staging", "Production", etc.), the Backup Type (i.e. "Daily") and, most importantly, the Tag to look for to identify instances to backup (Be sure the value of this Tag is 'Yes', without the quotes, for the instances you want snapshoted):
+Edit the environment variables to define the Name (i.e. "Our Cloud Servers"), Type (i.e. "Staging", "Production", etc.), the Backup Type (i.e. "Daily") and, most importantly, the Tag to look for to identify instances to backup:
 
 ```PowerShell
 # Environment
 $ENVIRONMENT_NAME = "Our Cloud Servers"
 $ENVIRONMENT_TYPE = "Production"
 $BACKUP_TYPE = "Daily"
-$backupTag = "xxxxxxxx"
+$backupTag = "xxxxxxxx" #Make sure the value of this tag is 'Yes', without the quotes, on the instances you want backed up
 ```
 ## Usage
 
