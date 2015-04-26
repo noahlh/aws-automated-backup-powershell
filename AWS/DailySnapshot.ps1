@@ -1,14 +1,14 @@
 ############## C O N F I G ##############
 ."C:\AWS\AWSConfig.ps1"
 
+############## F U N C T I O N S ##############
+."C:\AWS\AWSUtilities.ps1"
+
 #Environment
 $ENVIRONMENT_NAME = "My Environment"
 $ENVIRONMENT_TYPE = "Development"
 $BACKUP_TYPE = "Daily"
-$stagingInstanceIDs="i-xxxxxxxx","i-xxxxxxxx","i-xxxxxxxx"
-
-############## F U N C T I O N S ##############
-."C:\AWS\AWSUtilities.ps1"
+$stagingInstanceIDs= GetBackedUpInstances
 
 ############## M A I N ##############
 
