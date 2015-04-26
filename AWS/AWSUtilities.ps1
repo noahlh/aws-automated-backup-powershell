@@ -839,3 +839,40 @@ function CleanupWeeklySnapshots
         return false
     } 
 }
+#Description: Checks if an Amazon Web Service Instance object is set to be backed up
+#Returns: string
+function GetBackedUpInstances()
+{
+    try
+    {
+        $backedUpInstancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
+        $backedUpInstancesResponse = $EC2_CLIENT.DescribeInstances($backedUpInstancesRequest)
+        $backedUpInstancesResult = $backedUpInstancesResponse.DescribeInstancesResult.Reservations
+        $backedUpInstances = new-object System.Collections.ArrayList
+        
+        foreach($reservation in $backedUpInstancesResult)
+        {
+            foreach($instance in $reservation.Instances)
+            {
+				foreach($tag in $instance.Tags)
+				{
+                    If($tag.Key -eq "Backed Up?")
+                    {
+                        If($tag.value -eq "Yes")
+                        {
+					        $backedUpInstances.Add($instance.InstanceId) | out-null
+                        }
+                    }
+				}
+            }
+        }
+        return $backedUpInstances
+    }
+    catch [Exception]
+    {
+        $function = "GetBackedUpInstances"
+        $exception = $_.Exception.ToString()
+        WriteToLog "$function : $exception" -isException $true
+        return $null
+    }
+}
