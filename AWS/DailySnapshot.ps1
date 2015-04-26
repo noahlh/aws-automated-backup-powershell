@@ -8,7 +8,7 @@
 $ENVIRONMENT_NAME = "My Environment"
 $ENVIRONMENT_TYPE = "Development"
 $BACKUP_TYPE = "Daily"
-$backupTag = "xxxxxxxx"
+$backupTag = "xxxxxxxx" #Make sure the value of this tag is 'Yes', without the quotes, on the instances you want backed up
 
 ############## M A I N ##############
 
