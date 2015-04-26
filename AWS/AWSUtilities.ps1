@@ -841,7 +841,7 @@ function CleanupWeeklySnapshots
 }
 #Description: Checks if an Amazon Web Service Instance object is set to be backed up
 #Returns: string
-function GetBackedUpInstances()
+function GetBackedUpInstances([string[]] $backupTag)
 {
     try
     {
@@ -856,7 +856,7 @@ function GetBackedUpInstances()
             {
 				foreach($tag in $instance.Tags)
 				{
-                    If($tag.Key -eq "Backed Up?")
+                    If($tag.Key -eq $backupTag)
                     {
                         If($tag.value -eq "Yes")
                         {
