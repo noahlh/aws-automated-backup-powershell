@@ -9,7 +9,6 @@ $ENVIRONMENT_NAME = "My Environment"
 $ENVIRONMENT_TYPE = "Development"
 $BACKUP_TYPE = "Daily"
 $backupTag = "xxxxxxxx"
-$stagingInstanceIDs= GetBackedUpInstances $backupTag
 
 ############## M A I N ##############
 
@@ -17,6 +16,8 @@ try
 {
     $start = Get-Date
     WriteToLogAndEmail "$ENVIRONMENT_NAME $ENVIRONMENT_TYPE $BACKUP_TYPE Backup Starting" -excludeTimeStamp $true
+    
+    $stagingInstanceIDs= GetBackedUpInstances $backupTag
 
     CreateSnapshotsForInstances $stagingInstanceIDs
 
