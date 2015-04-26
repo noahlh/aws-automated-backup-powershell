@@ -8,7 +8,7 @@
 $ENVIRONMENT_NAME = "My Environment"
 $ENVIRONMENT_TYPE = "Development"
 $BACKUP_TYPE = "Daily"
-$backupTag = "Backed Up?"
+$backupTag = "xxxxxxxx"
 $stagingInstanceIDs= GetBackedUpInstances $backupTag
 
 ############## M A I N ##############
