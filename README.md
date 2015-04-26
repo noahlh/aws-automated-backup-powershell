@@ -10,7 +10,7 @@ First and foremost, credit for the original versions of these goes to Chris Hett
 
 ## Changes
 
-However, the scripts presented in Chris' post use v1.0 of the AWS API, which is now deprecated.  I dusted off the 'ol API documents & debugger to get them working with the current (as of July 2014) v2.0.
+However, the scripts presented in Chris' post use v1.0 of the AWS API, which is now deprecated.  I dusted off the 'ol API documents & debugger to get them working with the current (as of April 2015) v2.3.33.0.
 
 For the sake of completeness, I'm going to include the steps Chris outlined in his blog.
 
