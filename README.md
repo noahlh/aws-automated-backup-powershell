@@ -10,7 +10,7 @@ First and foremost, credit for the original versions of these goes to Chris Hett
 
 ## Changes
 
-However, the scripts presented in Chris' post use v1.0 of the AWS API, which is now deprecated.  I dusted off the 'ol API documents & debugger to get them working with the current (as of July 2014) v2.0.
+However, the scripts presented in Chris' post use v1.0 of the AWS API, which is now deprecated.  I dusted off the 'ol API documents & debugger to get them working with the current (as of April 2015) v2.3.33.0.
 
 For the sake of completeness, I'm going to include the steps Chris outlined in his blog.
 
@@ -115,14 +115,14 @@ Verify the paths to AWSConfig.ps1 and AWSUtilities.ps1 :
 ."C:\AWS\AWSUtilities.ps1"
 ```
 
-Edit the environment variables to define the Name (i.e. "Our Cloud Servers"), Type (i.e. "Staging", "Production", etc.), the Backup Type (i.e. "Daily") and, most importantly, the instance IDs of the servers to backup:
+Edit the environment variables to define the Name (i.e. "Our Cloud Servers"), Type (i.e. "Staging", "Production", etc.), the Backup Type (i.e. "Daily") and, most importantly, the Tag to look for to identify instances to backup:
 
 ```PowerShell
 # Environment
 $ENVIRONMENT_NAME = "Our Cloud Servers"
 $ENVIRONMENT_TYPE = "Production"
 $BACKUP_TYPE = "Daily"
-$stagingInstanceIDs = "i-xxxxxxxx", "i-xxxxxxxx", "i-xxxxxxxx"
+$backupTag = "xxxxxxxx" #Make sure the value of this tag is 'Yes', without the quotes, on the instances you want backed up
 ```
 ## Usage
 
@@ -158,4 +158,4 @@ I did this mostly to learn, so please excuse any bugs / awful code.  And more im
 
 ## License
 
-Copyright (C) 2015 - Noah Lehmann-Haupt.  Released under the MIT License. See the bundled LICENSE file for details.
+Copyright (C) 2015 - Noah Lehmann-Haupt.  Contributions by Ryan Bowman. Released under the MIT License. See the bundled LICENSE file for details.
