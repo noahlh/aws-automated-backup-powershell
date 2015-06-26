@@ -157,7 +157,7 @@ function WriteToLogAndEmail([string[]] $text, [bool] $isException = $false)
 }
 ############## E M A I L   F U N C T I O N S ##############
 
-#Description: Sends an email via Amazone Simple Email Service
+#Description: Sends an email via Amazon Simple Email Service
 #Returns: n/a
 function SendSesEmail([string] $from, [string[]]$toList, [string]$subject, [string]$body)
 {   
@@ -690,11 +690,10 @@ function CreateSnapshotsForInstances([string[]] $instanceIDs)
             $volumesResult = $volumesResponse.DescribeVolumesResult
             foreach($volume in $volumesResult.Volumes)
             {
-
                 if($InstanceIDs -contains $volume.Attachments[0].InstanceId)
-                {            
+                {
                     #Create the snapshot
-                    $snapshotId = CreateSnapshotForInstance $volume.VolumeId $volume.Attachments[0].InstanceId           
+                    $snapshotId = CreateSnapshotForInstance $volume.VolumeId $volume.Attachments[0].InstanceId
 
                     #Wait for snapshot creation to complete
                     $snapshotsRequest = new-object amazon.EC2.Model.DescribeSnapshotsRequest
@@ -710,7 +709,7 @@ function CreateSnapshotsForInstances([string[]] $instanceIDs)
                         $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest)
                         $snapshotsResult = $snapshotsResponse.DescribeSnapshotsResult
                     }
-                    while($snapshotsResult.Snapshots[0].State -ne "completed")            
+                    while($snapshotsResult.Snapshots[0].State -ne "completed")
                     
                 }            
             }  
@@ -778,7 +777,7 @@ function CleanupDailySnapshots
         {
             $description = $snapshot.Description
             $snapshotID = $snapshot.SnapshotId
-            if($snapshot.Description.Contains("Daily"))
+            if($snapshot.Description -and $snapshot.Description.Contains("Daily"))
             {
                 $backupDateTime = get-date $snapshot.StartTime
                 $expired = IsDailySnapshotExpired $backupDateTime
@@ -816,7 +815,7 @@ function CleanupWeeklySnapshots
         {
             $description = $snapshot.Description
             $snapshotID = $snapshot.SnapshotId
-            if($snapshot.Description.Contains("Weekly"))
+            if($snapshot.Description -and $snapshot.Description.Contains("Weekly"))
             {
                 $backupDateTime = get-date $snapshot.StartTime
                 $expired = IsWeeklySnapshotExpired $backupDateTime
@@ -854,16 +853,16 @@ function GetBackedUpInstances([string[]] $backupTag)
         {
             foreach($instance in $reservation.Instances)
             {
-				foreach($tag in $instance.Tags)
-				{
+                foreach($tag in $instance.Tags)
+                {
                     If($tag.Key -eq $backupTag)
                     {
                         If($tag.value -eq "Yes")
                         {
-					        $backedUpInstances.Add($instance.InstanceId) | out-null
+                            $backedUpInstances.Add($instance.InstanceId) | out-null
                         }
                     }
-				}
+                }
             }
         }
         return $backedUpInstances
