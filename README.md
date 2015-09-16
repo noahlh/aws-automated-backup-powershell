@@ -10,7 +10,7 @@ First and foremost, credit for the original versions of these goes to Chris Hett
 
 ## Changes
 
-However, the scripts presented in Chris' post use v1.0 of the AWS API, which is now deprecated.  I dusted off the 'ol API documents & debugger to get them working with the current (as of April 2015) v2.3.33.0.
+However, the scripts presented in Chris' post use v1.0 of the AWS API, which is now deprecated.  I dusted off the 'ol API documents & debugger to get them working with the v2.3.33.0 API. This has now been updated to work with v3.1.12.0 (as of September 2015)
 
 For the sake of completeness, I'm going to include the steps Chris outlined in his blog.
 
@@ -38,7 +38,8 @@ _(Note the latest version has the DLLs in the \Net35 and \Net45 subdirectories o
 
 ```PowerShell
 # AWS SDK Path 
-Add-Type -Path "C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.dll"
+Add-Type -Path "C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.EC2.dll"
+Add-Type -Path "C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.SimpleEmail.dll"
 ```
 
 Add your AWS Access Key, Secret, and Account ID:
