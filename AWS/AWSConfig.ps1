@@ -1,7 +1,8 @@
 ############## C O N F I G ##############
 
 #AWS SDK Path 
-Add-Type -Path "C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.dll"
+Add-Type -Path "C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.EC2.dll"
+Add-Type -Path "C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.SimpleEmail.dll"
 
 #Access Keys
 $accessKeyID =      "XXXXXXXXXXXXXXXXXXXX"
@@ -39,9 +40,9 @@ $MAX_FUNCTION_RUNTIME = 60 # minutes
 #Global Amazon EC2 Client
 $config=New-Object Amazon.EC2.AmazonEC2Config
 $config.ServiceURL = $serviceURL
-$EC2_CLIENT=[Amazon.AWSClientFactory]::CreateAmazonEC2Client($accessKeyID, $secretAccessKey, $config)
+$EC2_CLIENT=New-Object Amazon.EC2.AmazonEC2Client($accessKeyID, $secretAccessKey, $config)
 
 #Global Amazon SES Client
 $ses_config=New-Object Amazon.SimpleEmail.AmazonSimpleEmailServiceConfig
 $ses_config.ServiceURL = $sesURL
-$SES_CLIENT=[Amazon.AWSClientFactory]::CreateAmazonSimpleEmailServiceClient($accessKeyID, $secretAccessKey, $ses_config)
+$SES_CLIENT=New-Object Amazon.SimpleEmail.AmazonSimpleEmailServiceClient($accessKeyID, $secretAccessKey, $ses_config)
