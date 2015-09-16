@@ -234,7 +234,7 @@ function GetInstance([string] $instanceID)
         $instancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
         $instancesRequest.InstanceIds = $instanceID
         $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest)
-        $instancesResult = $instancesResponse.DescribeInstancesResult.Reservations
+        $instancesResult = $instancesResponse.Reservations
         return $instancesResult[0].Instances[0]
     }
     catch [Exception]
@@ -253,7 +253,7 @@ function GetAllInstances()
     {
         $instancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
         $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest)
-        $instancesResult = $instancesResponse.DescribeInstancesResult.Reservations
+        $instancesResult = $instancesResponse.Reservations
         
          $allInstances = new-object System.Collections.ArrayList
         
@@ -366,7 +366,7 @@ function StartInstance([string] $instanceID)
 
             WriteToLog "Instance $name ($instanceID) Starting"    
             $startResponse = $EC2_CLIENT.StartInstances($startReq)
-            $startResult = $startResponse.StartInstancesResult;
+			$startResult = $startResponse
             
             #Wait for instance to finish starting. Unlike Stop instance,start one at a time (ex. DC, SQL, SP)
             $instancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
@@ -380,7 +380,7 @@ function StartInstance([string] $instanceID)
                 
                 start-sleep -s 5
                 $instancesResponse = $EC2_CLIENT.DescribeInstances($instancesRequest)
-                $instancesResult = $instancesResponse.DescribeInstancesResult.Reservations
+                $instancesResult = $instancesResponse.Reservations
             }
             while($instancesResult[0].Instances[0].State.Name -ne "running") 
             
@@ -569,7 +569,7 @@ function GetSnapshot([string] $snapshotID)
         $snapshotsRequest = new-object amazon.EC2.Model.DescribeSnapshotsRequest
         $snapshotsRequest.SnapshotIds = $snapshotID
         $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest)
-        $snapshotsResult = $snapshotsResponse.DescribeSnapshotsResult
+		$snapshotsResult = $snapshotsResponse
         return $snapshotsResult.Snapshots[0]
     }
     catch [Exception]
@@ -589,7 +589,7 @@ function GetAllSnapshots
         $snapshotsRequest = new-object amazon.EC2.Model.DescribeSnapshotsRequest
         $snapshotsRequest.OwnerIds = $accountID
         $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest)
-        $snapshotsResult = $snapshotsResponse.DescribeSnapshotsResult
+		$snapshotsResult = $snapshotsResponse
         return $snapshotsResult.Snapshots
     }
     catch [Exception]
@@ -629,7 +629,7 @@ function DeleteSnapshot([string] $snapshotID)
         $deleteSnapshotRequest = new-object amazon.EC2.Model.DeleteSnapshotRequest
         $deleteSnapshotRequest.SnapshotId = $snapshotID
         $deleteSnapshotResponse = $EC2_CLIENT.DeleteSnapshot($deleteSnapshotRequest)
-        $deleteSnapshotResult = $deleteSnapshotResponse.DeleteSnapshotResult; 
+		$deleteSnapshotResult = $deleteSnapshotResponse;
         
         WriteToLog "Snapshot $name ($snapshotID) Deleted" 
         WriteToEmail "Snapshot Deleted: $name"    
@@ -661,7 +661,7 @@ function CreateSnapshotForInstance([string] $volumeID, [string] $instanceID)
         $createSnapshotRequest.Description = $description
         $createSnapshotRequest.VolumeId = $volumeID
         $createSnapshotResponse = $EC2_CLIENT.CreateSnapshot($createSnapshotRequest)
-        $createSnapshotResult = $createSnapshotResponse.CreateSnapshotResult; 
+        $createSnapshotResult = $createSnapshotResponse; 
         
         WriteToLog "Snapshot $description Created for $name ($instanceID)"
         WriteToEmail "$name $volumeID snapshot successful"
@@ -687,7 +687,7 @@ function CreateSnapshotsForInstances([string[]] $instanceIDs)
         {
             $volumesRequest = new-object amazon.EC2.Model.DescribeVolumesRequest
             $volumesResponse = $EC2_CLIENT.DescribeVolumes($volumesRequest)
-            $volumesResult = $volumesResponse.DescribeVolumesResult
+			$volumesResult = $volumesResponse
             foreach($volume in $volumesResult.Volumes)
             {
                 if($InstanceIDs -contains $volume.Attachments[0].InstanceId)
@@ -707,7 +707,7 @@ function CreateSnapshotsForInstances([string[]] $instanceIDs)
                         
                         start-sleep -s 5
                         $snapshotsResponse = $EC2_CLIENT.DescribeSnapshots($snapshotsRequest)
-                        $snapshotsResult = $snapshotsResponse.DescribeSnapshotsResult
+                        $snapshotsResult = $snapshotsResponse
                     }
                     while($snapshotsResult.Snapshots[0].State -ne "completed")
                     
@@ -846,7 +846,7 @@ function GetBackedUpInstances([string[]] $backupTag)
     {
         $backedUpInstancesRequest = new-object amazon.EC2.Model.DescribeInstancesRequest
         $backedUpInstancesResponse = $EC2_CLIENT.DescribeInstances($backedUpInstancesRequest)
-        $backedUpInstancesResult = $backedUpInstancesResponse.DescribeInstancesResult.Reservations
+        $backedUpInstancesResult = $backedUpInstancesResponse.Reservations
         $backedUpInstances = new-object System.Collections.ArrayList
         
         foreach($reservation in $backedUpInstancesResult)
