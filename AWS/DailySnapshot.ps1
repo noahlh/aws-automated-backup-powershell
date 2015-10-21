@@ -29,7 +29,7 @@ try
     $timespan = New-TimeSpan $start $end
     $hours=$timespan.Hours
     $minutes=$timespan.Minutes    
-    WriteToEmail "Backup took $hours hr(s) and $minutes min(s)"
+    WriteToEmail "Backup took $hours hour(s) and $minutes minute(s)"
     
     SendStatusEmail -successString "SUCCESS"
 }

@@ -114,7 +114,7 @@ function WriteToLog([string[]] $text, [bool] $isException = $false)
         write-host "$datetime $text"
         if($isException)
         {
-            write-eventlog -Logname "Application" -EntryType "Information" -EventID "0" -Source "AWS PowerShell Utilities" -Message $text
+            write-eventlog -Logname "Application" -EntryType "Information" -EventID "0" -Source "AWS PowerShell Utilities" -Message $($text)
         }
     }
     catch [Exception]
@@ -198,6 +198,39 @@ function SendSesEmail([string] $from, [string[]]$toList, [string]$subject, [stri
     }
     
 }
+#Description: Sends an email via a custom email provider you specify
+#Returns: n/a
+function SendCustomEmail([string] $from, [string[]]$toList, [string]$subject, [string]$body)
+{
+	try
+	{
+		#Create an email message
+		$emailMessage = New-Object System.Net.Mail.MailMessage
+		$emailMessage.From = $FROM_ADDRESS
+		$list = new-object 'System.Collections.Generic.List[string]'
+        foreach($address in $toList)
+        {
+           $emailMessage.To.Add($address)
+        }
+		$emailMessage.Subject = $subject
+		$emailMessage.IsBodyHtml = $FALSE
+		$emailMessage.Body = $body
+	
+		#Create an SMTP object
+		$smtpClient = New-Object System.Net.Mail.SmtpClient($CUSTOM_EMAIL_SERVER, $CUSTOM_EMAIL_PORT)
+		$smtpClient.EnableSsl = $CUSTOM_EMAIL_SSL
+		$smtpClient.Credentials = New-Object System.Net.NetworkCredential($CUSTOM_EMAIL_USERNAME, ($CUSTOM_EMAIL_SECURE_PASSWORD | ConvertTo-SecureString))
+	
+		#Send message
+		$smtpClient.Send($emailMessage)
+	}
+	catch [Exception]
+	{
+        $function = "SendCustomEmail"
+        $exception = $_.Exception.ToString()
+        WriteToLog "$function : $exception" -isException $true
+    }
+}
 #Description: Sends an status email to administrators
 #Returns: n/a
 function SendStatusEmail([string[]] $toAddress, [string] $successString = "", [string] $subject = "")
@@ -207,14 +240,21 @@ function SendStatusEmail([string[]] $toAddress, [string] $successString = "", [s
     {   
         if($subject -eq "")
         {
-            $subject = $successString + ": $ENVIRONMENT_NAME $ENVIRONMENT_TYPE $BACKUP_TYPE Backup"
+            $subject = $SUBJECT_PREFIX + $successString + ": $ENVIRONMENT_NAME $ENVIRONMENT_TYPE $BACKUP_TYPE Backup"
         }
 
         $body = $global:email
         
         if($toAddress -eq $null -or $toAddress -eq "") { $toAddress = $ADMIN_ADDRESSES }
         
-        SendSesEmail $FROM_ADDRESS $toAddress $subject $body
+		if($CUSTOM_EMAIL)
+		{
+			SendCustomEmail $FROM_ADDRESS $toAddress $subject $body
+		}
+		else
+		{
+			SendSesEmail $FROM_ADDRESS $toAddress $subject $body
+		}
     }
     catch [Exception]
     {
