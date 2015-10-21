@@ -20,6 +20,8 @@ For the sake of completeness, I'm going to include the steps Chris outlined in h
 
 The first thing you will want to do is apply for access to SES and setup a verified sender address; this may take several hours.
 
+Optionally, you can use your own email server (see Configure AWSConfig.ps1).
+
 ### 2.  Get the AWS SDK for .NET
 
 Download the [AWS SDK for .NET](http://aws.amazon.com/sdkfornet/)
@@ -53,7 +55,7 @@ $secretAccessKey="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 $accountID = "############"
 ```
 
-Uncomment both the region that your instances are running in and the region for your SES emails:
+Uncomment the region that your instances are running in:
 
 ```PowerShell
 # EC2 Regions
@@ -65,7 +67,11 @@ Uncomment both the region that your instances are running in and the region for 
 # $serviceURL="https://ec2.ap-southeast-2.amazonaws.com" # Asia Pacific (Sydney)
 # $serviceURL="https://ec2.ap-northeast-1.amazonaws.com" # Asia Pacific (Tokyo)
 # $serviceURL="https://ec2.sa-east-1.amazonaws.com" # South America (Sao Paulo)
+```
 
+If you are using SES, uncomment the region you are using:
+
+```PowerShell
 # SES Regions
 # $sesURL="https://email.us-east-1.amazonaws.com" # US East (Northern Virginia)
 # $sesURL="https://email.us-west-2.amazonaws.com" # US West (Oregon)
@@ -79,12 +85,27 @@ Enter your log path:
 $LOG_PATH="C:\AWS\Logs\"
 ```
 
-Provide a from address (must be verified in Amazon Simple Email Services (SES)) & an admin address that will receive emails:
+Provide a from address (must be verified in Amazon Simple Email Services (SES) if using it) & an admin address that will receive emails. Optionally add a prefix to your subject for better sorting/routing of email:
 
 ```PowerShell
-# Email
-$FROM_ADDRESS = "nnn@nnn.nnn"
-$ADMIN_ADDRESSES = "nnn@nnn.nnn"
+#Email
+$FROM_ADDRESS =     "nnn@nnn.com"
+$ADMIN_ADDRESSES =  "nnn@nnn.com" #Add multiple addresses as such: "user1@nnn.com", "user2@nnn.com"
+$SUBJECT_PREFIX = "" #Leave blank if you do not want any prefix
+```
+
+If using a custom email server set the following variables. The password is stored in an ecrypted form (see [here](http://social.technet.microsoft.com/wiki/contents/articles/4546.working-with-passwords-secure-strings-and-credentials-in-windows-powershell.aspx)):
+
+```PowerShell
+$CUSTOM_EMAIL = $true # Set to $true to enable custom email
+
+
+#Custom Email Properties
+$CUSTOM_EMAIL_USERNAME = "xxxxxx" #Can be "domain\username" or "user@domain.com". This will depend of your email system.
+$CUSTOM_EMAIL_SECURE_PASSWORD = "*************" #Run "read-host -AsSecureString | ConvertFrom-SecureString" and paste the output above within quotes and no line breaks
+$CUSTOM_EMAIL_SERVER = "mail.nnn.com"
+$CUSTOM_EMAIL_PORT  = 25
+$CUSTOM_EMAIL_SSL = $true
 ```
 
 Edit the max number of days to keep old snapshots and the max allowable runtime of the script:
