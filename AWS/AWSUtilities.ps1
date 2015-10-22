@@ -94,7 +94,8 @@ function GetLogDate
     {
         $logDate = get-date ((get-date).AddDays($dayOfWeekNumber * -1)) -f yyyyMMdd
     } 
-    return  $logDate  
+    $logName = $logDate + ".txt"
+    return  $logName  
 }
 #Description: Writes a message to a log file, console
 #Returns: n/a
