@@ -23,7 +23,7 @@ try
 
     CleanupDailySnapshots
 
-    WriteToLogAndEmail "$ENVIRONMENT_NAME $ENVIRONMENT_TYPE $BACK_UPTYPE Backup Complete" -excludeTimeStamp $true   
+    WriteToLogAndEmail "$ENVIRONMENT_NAME $ENVIRONMENT_TYPE $BACKUP_TYPE Backup Complete" -excludeTimeStamp $true   
     
     $end = Get-Date
     $timespan = New-TimeSpan $start $end
