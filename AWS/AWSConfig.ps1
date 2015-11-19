@@ -28,7 +28,7 @@ $accountID = "############"
 $LOG_PATH="C:\AWS\Logs\"
 
 #Email
-$CUSTOM_EMAIL = $false # Set to $true to enable SES email
+$CUSTOM_EMAIL = $false # Set to $true to enable custom email
 $FROM_ADDRESS =     "nnn@nnn.com"
 $ADMIN_ADDRESSES =  "nnn@nnn.com" #Add multiple addresses as such: "user1@nnn.com", "user2@nnn.com"
 $SUBJECT_PREFIX = "" #Leave blank if you do not want any prefix
