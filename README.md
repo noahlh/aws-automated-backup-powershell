@@ -180,4 +180,4 @@ I did this mostly to learn, so please excuse any bugs / awful code.  And more im
 
 ## License
 
-Copyright (C) 2015 - Noah Lehmann-Haupt.  Contributions by Ryan Bowman. Released under the MIT License. See the bundled LICENSE file for details.
+Copyright (C) 2015 - 2016 Noah Lehmann-Haupt.  Contributions by Ryan Bowman.  Released under the MIT License. See the bundled LICENSE file for details.
